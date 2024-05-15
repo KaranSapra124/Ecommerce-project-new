@@ -57,14 +57,33 @@
 // Dine In (Customer) -Request-> Waiter -Request-> Chef (In Process)
 // Chef -Response-> Waiter -Response-> Dine In (Customer) (Request fulfilled)
 const products = document.getElementById("products");
-
+const individualProduct = document.getElementById("individualProduct");
+const id = new URLSearchParams(window.location.search);
+const val = id.get("id");
+let star = "⭐";
+// console.log(val);
 function getProducts(url) {
   fetch(url)
     .then(function (data) {
       return data.json(); //JSON -> Javascript Object Notation , light weight data format which is easy for machine to parse and store it and also easy for humans to read and write it.
     })
     .then(function (data) {
+      // console.log(data,"DATA");
       displayProducts(data);
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
+}
+
+function getIndividualProduct(url) {
+  fetch(url)
+    .then(function (data) {
+      return data.json(); //JSON -> Javascript Object Notation , light weight data format which is easy for machine to parse and store it and also easy for humans to read and write it.
+    })
+    .then(function (data) {
+      console.log(data);
+      displayIndividualProduct(data);
     })
     .catch(function (err) {
       console.log(err);
@@ -74,17 +93,57 @@ function getProducts(url) {
 function displayProducts(arr) {
   for (let i = 0; i < arr.length; i++) {
     products.innerHTML += `
-      <div class="max-w-sm rounded overflow-hidden shadow-lg m-4 flex flex-col justify-center items-center">
-        <img class="w-52" src="${arr[i].image}" alt="No Image">
-        <div class="px-6 py-4">
-          <div class="font-bold text-xl mb-2">${arr[i].title}</div>
-          <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">${arr[i].category}</span>
+     <a href="../productpage.html?id=${arr[i].id}">
+     <div class="max-w-sm rounded overflow-hidden shadow-lg m-4 flex flex-col justify-center items-center">
+     <img class="w-52" src="${arr[i].image}" alt="No Image">
+     <div class="px-6 py-4">
+       <div class="font-bold text-xl mb-2">${arr[i].title}</div>
+       <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">${
+         arr[i].category
+       }</span>
 
-          <p class="text-gray-700 text-base font-bold">₹${Math.round(arr[i].price*80)}</p>
-        </div>
-      </div>
+       <p class="text-gray-700 text-base font-bold">₹${Math.round(
+         arr[i].price * 80
+       )}</p>
+     </div>
+   </div>
+
+     </a>
     `;
   }
 }
 
-getProducts("https://fakestoreapi.com/products");
+function displayIndividualProduct(obj) {
+  individualProduct.innerHTML = `
+  <div class="container  m-auto max-w-xl mt-8">
+  <div class="max-w-sm  rounded overflow-hidden shadow-lg m-4">
+      <img class="w-full" src="${obj.image}" alt="No Image">
+      <div class="px-6 py-4">
+          <div class="font-bold text-xl mb-2">${obj.title}</div>
+          <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded border border-green-400">${
+            obj.category
+          }</span>
+          <p class="text-gray-700 text-base font-bold">₹${Math.round(
+            obj.price * 80
+          )}</p>
+          <p class="text-gray-700 text-base font-bold bg-green-200 border border-green-400 w-fit rounded p-1">${star.repeat(
+            Math.round(obj.rating.rate)
+          )}</p>
+      </div>
+      <div class="px-6 py-4">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+              Add to Cart
+          </button>
+      </div>
+  </div>
+</div>
+
+    `;
+}
+
+if (products !== undefined && products !== null) {
+  getProducts("https://fakestoreapi.com/products");
+}
+if (individualProduct) {
+  getIndividualProduct(`https://fakestoreapi.com/products/${val}`);
+}
