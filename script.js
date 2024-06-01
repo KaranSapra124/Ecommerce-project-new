@@ -128,7 +128,7 @@ function displayProducts(arr) {
   products.innerHTML = "";
   for (let i = 0; i < arr.length; i++) {
     products.innerHTML += `
-     <a href="../productpage.html?id=${arr[i].id}">
+     <a href="/productpage.html?id=${arr[i].id}">
      <div class="max-w-sm rounded overflow-hidden shadow-lg m-4 flex flex-col justify-center items-center">
      <img class="w-52" src="${arr[i].image}" alt="No Image">
      <div class="px-6 py-4">
